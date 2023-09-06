@@ -1,0 +1,131 @@
+@font-face {
+  font-family: 'Inter-Bold';
+  src: url('@/assets/fonts/Inter-Bold.ttf');
+}
+@font-face {
+  font-family: 'Inter-ExtraBold';
+  src: url('@/assets/fonts/Inter-ExtraBold.ttf');
+}
+@font-face {
+  font-family: 'Inter-SemiBold';
+  src: url('@/assets/fonts/Inter-SemiBold.ttf');
+}
+@font-face {
+  font-family: 'Inter-Medium';
+  src: url('@/assets/fonts/Inter-Medium.ttf');
+}
+@font-face {
+  font-family: 'Inter-Regular';
+  src: url('@/assets/fonts/Inter-Regular.ttf');
+}
+
+#app {
+  @apply bg-[#F2F0F9] min-h-screen;
+}
+.page_wrapper {
+  @apply relative font-interregular text-primary max-w-[1440px] mx-auto p-10;
+}
+.table_heading {
+  @apply font-semibold text-primary;
+}
+.tabs_wrapper {
+  @apply flex justify-between items-center text-sm font-medium text-center text-gray-500 border-b border-[#C6C2DE];
+}
+.tabs_wrapper ul {
+  @apply flex flex-wrap;
+}
+.tabs_wrapper ul li {
+  @apply inline-block cursor-pointer px-4 py-2 rounded-t-lg hover:text-[#25213B];
+}
+
+/* Table wrapper */
+.table_wrapper {
+  @apply rounded-md shadow-md;
+}
+/* Table top */
+.table_top {
+  @apply bg-white rounded-t-md flex items-center justify-between py-3 px-6;
+}
+.filter {
+  @apply w-fit relative mr-8;
+}
+.filter_btn {
+  @apply border border-[#C6C2DE] text-dark p-2 rounded-md;
+}
+.filter_btn i {
+  @apply text-[#8B83BA] mr-2;
+}
+.filter_dropdown {
+  @apply absolute bg-white z-10 mt-2 p-2 w-[170px] border border-[#C6C2DE] rounded-md shadow-lg text-xs;
+}
+.filter_dropdown h1 {
+  @apply mb-2 ml-2;
+}
+.filter_dropdown label {
+  @apply text-xs mb-2 px-2 py-1 rounded-md flex items-center justify-between font-medium text-dark;
+}
+.filter_dropdown input {
+  @apply w-4 h-4 text-[#6D5BD0] bg-white border-[#8B83BA];
+}
+
+.search {
+  @apply relative w-[400px];
+}
+.search div {
+  @apply absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none;
+}
+.search input {
+  @apply block w-full px-4 py-2.5 pl-10 text-xs text-primary border border-gray-300 rounded-md bg-[#F4F2FF] focus:outline-none focus:ring-0;
+}
+input[type='search']::-webkit-search-cancel-button {
+  display: none;
+}
+.table_top .pay_btn {
+  @apply text-white text-sm bg-[#6D5BD0] px-3 py-2 rounded-md;
+}
+
+/* Table */
+.users_table {
+  @apply rounded-b-md bg-white text-primary;
+}
+.users_table table th {
+  @apply py-3 first:pl-6 last:pr-6 text-xs text-left bg-[#F4F2FF];
+}
+.users_table table td {
+  @apply py-2 text-sm first:pl-6 first:flex items-center last:pr-6;
+}
+
+.users_table .status_badge {
+  @apply capitalize text-xs py-0.5 flex items-center w-fit rounded-xl px-2;
+}
+.users_table .status_badge i {
+  @apply text-[8px] mr-1;
+}
+.users_table .view_more {
+  @apply cursor-pointer;
+}
+.users_table .menu-icon {
+  @apply text-xl cursor-pointer;
+}
+.users_table .down-icon {
+  @apply text-sm mb-1 cursor-pointer;
+}
+.users_table .checkbox {
+  @apply h-8 w-8 scale-50;
+}
+.users_table .user_name,
+.amount,
+.date {
+  @apply text-dark;
+}
+
+.users_table .table_footer {
+  @apply bg-[#F4F2FF] rounded-b-md text-sm font-intermedium flex items-center justify-end pr-8 py-4;
+}
+
+.users_table .table_footer select {
+  @apply bg-[#F4F2FF] focus:outline-none focus:ring-0;
+}
+.users_table .table_footer .footer-items-wrapper {
+  @apply flex items-center w-[40%] justify-between;
+}
