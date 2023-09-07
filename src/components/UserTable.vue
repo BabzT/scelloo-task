@@ -1,15 +1,18 @@
 <script setup>
 import { useStore } from 'vuex'
-import { computed, onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 
 const store = useStore()
-const sort_value = ref('default')
-const filter = ref(false)
-const searchterm = ref('')
+const searchTerm = ref('')
+const filterDropdown = ref(false)
 const payee = ref([])
+const selectAll = ref(false)
 const expandedRow = ref(null)
+const filtertarget = ref(null)
+const sort_value = ref('default')
 
-const emit = defineEmits(['updateSearchTerm'])
+const emit = defineEmits(['updateSearchTerm', 'sortUsers'])
 
 const props = defineProps({
   users: {
@@ -17,44 +20,60 @@ const props = defineProps({
   }
 })
 
-const searchTerm = ref('')
+// For sorting
+watch(sort_value, (newValue) => {
+  emit('sortUsers', newValue)
+})
 
+// For searching
+watch(searchTerm, (newValue) => {
+  if (newValue === '') {
+    sort_value.value = 'default'
+  }
+})
+
+// Open filter dropdown
+const toggleFilter = () => {
+  filterDropdown.value = !filterDropdown.value
+}
+
+// Expand table row
 const toggleRow = (index) => {
   expandedRow.value = expandedRow.value === index ? null : index
 }
 
-watch(searchterm, (newValue) => {
-  if (newValue !== '') {
-    store.dispatch('users/filterUsers', newValue)
-  } else {
-    sort_value.value = 'default'
-    getUsers()
-  }
-})
-watch(sort_value, (newValue) => {
-  if (newValue !== 'default') {
-    store.commit('users/SORT_USERS', newValue)
-  } else {
-    store.commit('users/RESET_USERS')
-  }
-})
-
-const toggleFilter = () => {
-  filter.value = !filter.value
-}
-
+// Mark as paid
 const markAsPaid = () => {
   store.dispatch('users/markAsPaid', payee.value)
   payee.value = []
+  selectAll.value = false
 }
 
-const getUsers = () => {
-  let data = {
-    status: 'all',
-    keyword: searchterm.value
+// Select user or All users
+const isSelected = (user) => payee.value.includes(user)
+const toggleSelection = (user) => {
+  if (isSelected(user)) {
+    payee.value = payee.value.filter((selected) => selected !== user)
+  } else {
+    payee.value.push(user)
   }
-  store.dispatch('users/getUsersData', data)
 }
+
+const selectAllUsers = () => {
+  selectAll.value = !selectAll.value
+  if (selectAll.value) {
+    props.users.forEach((user) => {
+      if (!isSelected(user.id)) {
+        payee.value.push(user.id)
+      }
+    })
+  } else {
+    payee.value = []
+  }
+}
+
+// Close filter dropdown when clicked outside
+onClickOutside(filtertarget, () => (filterDropdown.value = false))
 </script>
 
 <template>
@@ -66,7 +85,7 @@ const getUsers = () => {
             <i class="fas fa-filter"></i>Filter
           </button>
           <!-- Filter dropdown -->
-          <div class="filter_dropdown" v-if="filter">
+          <div ref="filtertarget" class="filter_dropdown" v-if="filterDropdown">
             <h1>SORT BY:</h1>
             <label :class="{ 'bg-[#F2F0F9]': sort_value === 'default' }" for="default"
               >Default
@@ -120,7 +139,15 @@ const getUsers = () => {
         </div>
       </div>
       <!-- Pay Dues -->
-      <button @click="markAsPaid" type="button" class="pay_btn">PAY DUES</button>
+      <button
+        :disabled="payee.length === 0"
+        :class="{ 'opacity-75': payee.length === 0 }"
+        @click="markAsPaid"
+        type="button"
+        class="pay_btn"
+      >
+        PAY DUES
+      </button>
     </div>
 
     <!-- Table -->
@@ -128,7 +155,14 @@ const getUsers = () => {
       <table class="w-full">
         <thead>
           <tr>
-            <th><input class="checkbox" type="checkbox" name="" id="" /></th>
+            <th>
+              <input
+                class="checkbox"
+                type="checkbox"
+                :checked="selectAll"
+                @change="selectAllUsers"
+              />
+            </th>
             <th>NAME</th>
             <th>USER STATUS</th>
             <th>PAYMENT STATUS</th>
@@ -145,10 +179,9 @@ const getUsers = () => {
                 <span class="mr-4">
                   <input
                     class="checkbox"
-                    v-model="payee"
-                    :value="user.id"
+                    :checked="isSelected(user.id)"
+                    @change="toggleSelection(user.id)"
                     type="checkbox"
-                    :id="user.id"
                   />
                 </span>
                 <span @click="toggleRow(index)">
@@ -218,20 +251,27 @@ const getUsers = () => {
             <td></td>
           </tr>
           <tr
-            :class="{ 'bg-[#F4F2FF]': expandedRow === index }"
-            class="expanded-row-data"
+            class="expanded-row-data bg-[#F4F2FF]"
             v-if="expandedRow === index"
+            v-for="(activity, index) in user.activities"
+            :key="index"
           >
             <td></td>
-            <td>12/APR/2023</td>
+            <td>{{ activity.date }}</td>
             <td class="text-dark">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultricies.
+              {{ activity.activity }}
             </td>
             <td class="text-dark" colspan="3">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rhoncus, sed purus eu semper
-              morbi id nunc, adipiscing vitae. Ultricies suspendisse vestibulum.
+              {{ activity.details }}
             </td>
             <td></td>
+          </tr>
+          <!-- Empty user activities -->
+          <tr
+            v-if="expandedRow === index && user.activities?.length <= 0"
+            class="h-20 bg-[#F4F2FF]"
+          >
+            <td colspan="7" class="text-center font-intermedium">NO RECORDS FOUND</td>
           </tr>
         </tbody>
       </table>
