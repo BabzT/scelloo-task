@@ -116,6 +116,12 @@ input[type='search']::-webkit-search-cancel-button {
 .date {
   @apply text-dark;
 }
+.users_table .table_body .expanded-row-head td {
+  @apply text-xs font-intermedium py-5;
+}
+.users_table .table_body .expanded-row-data td {
+  @apply text-xs;
+}
 
 /* Table footer */
 .users_table .table_footer {

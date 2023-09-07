@@ -152,7 +152,6 @@ export default {
         const user = state.users[i]
         if (user.payment_status === 'unpaid' || user.payment_status === 'overdue') {
           total += user.amount
-          console.log(user.amount)
         }
       }
       state.total_amount = total

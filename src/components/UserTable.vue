@@ -9,6 +9,16 @@ const searchterm = ref('')
 const payee = ref([])
 const expandedRow = ref(null)
 
+const emit = defineEmits(['updateSearchTerm'])
+
+const props = defineProps({
+  users: {
+    type: Object
+  }
+})
+
+const searchTerm = ref('')
+
 const toggleRow = (index) => {
   expandedRow.value = expandedRow.value === index ? null : index
 }
@@ -38,10 +48,6 @@ const markAsPaid = () => {
   payee.value = []
 }
 
-const users = computed(() => {
-  return store.getters['users/users']
-})
-
 const getUsers = () => {
   let data = {
     status: 'all',
@@ -49,10 +55,6 @@ const getUsers = () => {
   }
   store.dispatch('users/getUsersData', data)
 }
-
-onMounted(() => {
-  getUsers()
-})
 </script>
 
 <template>
@@ -110,8 +112,9 @@ onMounted(() => {
           </div>
           <input
             type="search"
-            v-model="searchterm"
+            v-model="searchTerm"
             id="default-search"
+            @input="emit('updateSearchTerm', searchTerm)"
             placeholder="Search users by Name, Email or Date"
           />
         </div>
