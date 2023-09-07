@@ -4,8 +4,16 @@ import { computed, onMounted } from 'vue'
 
 const store = useStore()
 
+const getUsers = () => {
+  let data = {
+    status: 'overdue',
+    keyword: ''
+  }
+  store.dispatch('users/getUsersData', data)
+}
+
 onMounted(() => {
-  store.dispatch('users/getUsersData', 'overdue')
+  getUsers()
 })
 </script>
 

@@ -67,7 +67,6 @@
 .filter_dropdown input {
   @apply w-4 h-4 text-[#6D5BD0] bg-white border-[#8B83BA];
 }
-
 .search {
   @apply relative w-[400px];
 }
@@ -89,12 +88,11 @@ input[type='search']::-webkit-search-cancel-button {
   @apply rounded-b-md bg-white text-primary;
 }
 .users_table table th {
-  @apply py-3 first:pl-6 last:pr-6 text-xs text-left bg-[#F4F2FF];
+  @apply py-3 border-y px-2 first:pl-6 last:pr-6 text-xs text-left bg-[#F4F2FF];
 }
-.users_table table td {
-  @apply py-2 text-sm first:pl-6 first:flex items-center last:pr-6;
+.users_table table .table_body td {
+  @apply py-3 border-y text-sm px-2 first:pl-6 last:pr-6;
 }
-
 .users_table .status_badge {
   @apply capitalize text-xs py-0.5 flex items-center w-fit rounded-xl px-2;
 }
@@ -111,7 +109,7 @@ input[type='search']::-webkit-search-cancel-button {
   @apply text-sm mb-1 cursor-pointer;
 }
 .users_table .checkbox {
-  @apply h-8 w-8 scale-50;
+  @apply h-4 w-4;
 }
 .users_table .user_name,
 .amount,
@@ -119,8 +117,9 @@ input[type='search']::-webkit-search-cancel-button {
   @apply text-dark;
 }
 
+/* Table footer */
 .users_table .table_footer {
-  @apply bg-[#F4F2FF] rounded-b-md text-sm font-intermedium flex items-center justify-end pr-8 py-4;
+  @apply bg-[#F4F2FF] border-t rounded-b-md text-sm font-intermedium flex items-center justify-end pr-8 py-4;
 }
 
 .users_table .table_footer select {
@@ -128,4 +127,8 @@ input[type='search']::-webkit-search-cancel-button {
 }
 .users_table .table_footer .footer-items-wrapper {
   @apply flex items-center w-[40%] justify-between;
+}
+
+.users_table .empty-state {
+  @apply bg-[#F4F2FF] py-10 flex items-center justify-center text-sm font-intermedium border-y;
 }

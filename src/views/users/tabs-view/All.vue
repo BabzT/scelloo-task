@@ -6,20 +6,36 @@ const store = useStore()
 const sort_value = ref('default')
 const filter = ref(false)
 const searchterm = ref('')
+const payee = ref([])
+const expandedRow = ref(null)
+
+const toggleRow = (index) => {
+  expandedRow.value = expandedRow.value === index ? null : index
+}
 
 watch(searchterm, (newValue) => {
-  store.dispatch('users/filterUsers', newValue)
+  if (newValue !== '') {
+    store.dispatch('users/filterUsers', newValue)
+  } else {
+    sort_value.value = 'default'
+    getUsers()
+  }
 })
 watch(sort_value, (newValue) => {
   if (newValue !== 'default') {
     store.commit('users/SORT_USERS', newValue)
   } else {
-    getUsers()
+    store.commit('users/RESET_USERS')
   }
 })
 
 const toggleFilter = () => {
   filter.value = !filter.value
+}
+
+const markAsPaid = () => {
+  store.dispatch('users/markAsPaid', payee.value)
+  payee.value = []
 }
 
 const users = computed(() => {
@@ -101,7 +117,7 @@ onMounted(() => {
         </div>
       </div>
       <!-- Pay Dues -->
-      <button type="button" class="pay_btn">PAY DUES</button>
+      <button @click="markAsPaid" type="button" class="pay_btn">PAY DUES</button>
     </div>
 
     <!-- Table -->
@@ -119,15 +135,23 @@ onMounted(() => {
           </tr>
         </thead>
 
-        <tbody v-if="users">
-          <tr v-for="(user, index) in users" :key="index">
+        <tbody class="table_body" v-for="(user, index) in users" :key="index">
+          <tr>
             <td>
-              <span class="mr-2">
-                <input class="checkbox" type="checkbox" name="" id="" />
-              </span>
-              <span>
-                <i class="fas fa-chevron-circle-down down-icon"></i>
-              </span>
+              <div class="flex items-center">
+                <span class="mr-4">
+                  <input
+                    class="checkbox"
+                    v-model="payee"
+                    :value="user.id"
+                    type="checkbox"
+                    :id="user.id"
+                  />
+                </span>
+                <span @click="toggleRow(index)">
+                  <i class="fas fa-chevron-circle-down down-icon"></i>
+                </span>
+              </div>
             </td>
             <td>
               <p class="user_name">{{ user.first_name }} {{ user.last_name }}</p>
@@ -178,8 +202,29 @@ onMounted(() => {
               <div><i class="fas fa-ellipsis-v menu-icon"></i></div>
             </td>
           </tr>
+          <tr v-if="expandedRow === index">
+            <td></td>
+            <td>DATE</td>
+            <td>USER ACTIVITY</td>
+            <td colspan="3">DETAIL</td>
+            <td></td>
+          </tr>
+          <tr v-if="expandedRow === index">
+            <td></td>
+            <td>12/APR/2023</td>
+            <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultricies.</td>
+            <td colspan="3">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Rhoncus, sed purus eu semper
+              morbi id nunc, adipiscing vitae. Ultricies suspendisse vestibulum.
+            </td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
+
+      <!-- Empty table -->
+      <div v-if="users.length === 0" class="empty-state">NO RECORDS FOUND</div>
+
       <!--Table Footer -->
       <div class="table_footer">
         <div class="footer-items-wrapper">
@@ -193,7 +238,9 @@ onMounted(() => {
             </select>
           </div>
 
-          <p>1 to 10 of 276</p>
+          <p v-if="users?.length > 1">1 to {{ users?.length }} of {{ users?.length }}</p>
+          <p v-else-if="users?.length === 1">1 of {{ users?.length }}</p>
+          <p v-else>0 of {{ users?.length }}</p>
 
           <div>
             <i class="fas fa-chevron-left"></i>
@@ -206,3 +253,15 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style>
+.users_table table .table_body tr td:nth-child(1) {
+  width: 10%;
+}
+.users_table table .table_body tr td:nth-child(2) {
+  width: 20%;
+}
+.users_table table .table_body tr td:nth-child(3) {
+  width: 30%;
+}
+</style>
