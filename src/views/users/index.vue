@@ -28,7 +28,7 @@ const switchTabs = (tab) => {
 <template>
   <main class="page_wrapper">
     <div>
-      <h1 class="table_heading">Users</h1>
+      <h1 class="table_heading">USERS</h1>
 
       <!-- Tabs -->
       <div class="tabs_wrapper">
