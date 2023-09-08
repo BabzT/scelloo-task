@@ -261,7 +261,8 @@ export default {
     users_data: [],
     users: [],
     default_users: [],
-    total_amount: 0
+    total_amount: 0,
+    page_status: null
   },
 
   mutations: {
@@ -270,6 +271,8 @@ export default {
         state.users_data = state.data
       } else {
         state.users_data = state.data.filter((user) => user.payment_status === status)
+        state.page_status = status
+        console.log(state.page_status)
       }
     },
     SET_USERS(state, keyword) {
@@ -314,6 +317,9 @@ export default {
           .forEach((user) => {
             user.payment_status = 'paid'
             state.total_amount -= user.amount
+            if (state.page_status === 'unpaid') {
+              state.users.splice(user, 1)
+            }
           })
       })
     },
