@@ -80,12 +80,12 @@ onClickOutside(filtertarget, () => (filterDropdown.value = false))
   <div class="table_wrapper">
     <div class="table_top">
       <div class="flex">
-        <div class="filter">
+        <div ref="filtertarget" class="filter">
           <button @click="toggleFilter" class="filter_btn">
             <i class="fas fa-filter"></i>Filter
           </button>
           <!-- Filter dropdown -->
-          <div ref="filtertarget" class="filter_dropdown" v-if="filterDropdown">
+          <div class="filter_dropdown" v-if="filterDropdown">
             <h1>SORT BY:</h1>
             <label :class="{ 'bg-[#F2F0F9]': sort_value === 'default' }" for="default"
               >Default
@@ -184,8 +184,9 @@ onClickOutside(filtertarget, () => (filterDropdown.value = false))
                     type="checkbox"
                   />
                 </span>
-                <span @click="toggleRow(index)">
-                  <i class="fas fa-chevron-circle-down down-icon"></i>
+                <span>
+                  <i v-if="expandedRow === index" class="fas fa-chevron-circle-up down-icon"></i>
+                  <i v-else class="fas fa-chevron-circle-down down-icon"></i>
                 </span>
               </div>
             </td>
@@ -232,7 +233,7 @@ onClickOutside(filtertarget, () => (filterDropdown.value = false))
               <p>USD</p>
             </td>
             <td>
-              <div class="view_more">View more</div>
+              <div @click="toggleRow(index)" class="view_more">View more</div>
             </td>
             <td>
               <div><i class="fas fa-ellipsis-v menu-icon"></i></div>
